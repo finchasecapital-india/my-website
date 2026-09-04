@@ -109,7 +109,9 @@ p { color: var(--mid-gray); }
 .gradient-text {
   background: linear-gradient(90deg, var(--accent), var(--blue), var(--green));
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  display: inline-block; overflow: visible; padding: 0.06em 0.02em; margin: -0.06em -0.02em;
+  -webkit-text-fill-color: transparent;
+  display: inline-block; overflow: visible; line-height: 1.4;
+  padding: 0.05em 0.18em 0.15em 0.18em; margin: -0.05em -0.18em -0.15em -0.18em;
 }
 .italic { font-style: italic; }
 
