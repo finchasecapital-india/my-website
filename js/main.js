@@ -8,32 +8,6 @@
   /* Lucide */
   const bootIcons = () => { if (window.lucide) window.lucide.createIcons(); };
 
-  /* Custom cursor */
-  const cursor = () => {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    const dot = document.createElement("div");
-    const ring = document.createElement("div");
-    dot.className = "cursor-dot";
-    ring.className = "cursor-ring";
-    document.body.append(dot, ring);
-    let x = 0, y = 0, rx = 0, ry = 0;
-    document.addEventListener("mousemove", (e) => {
-      x = e.clientX; y = e.clientY;
-      dot.style.transform = `translate(${x}px,${y}px)`;
-    });
-    const tick = () => {
-      rx += (x - rx) * 0.12;
-      ry += (y - ry) * 0.12;
-      ring.style.transform = `translate(${rx}px,${ry}px)`;
-      requestAnimationFrame(tick);
-    };
-    tick();
-    document.addEventListener("mouseover", (e) => {
-      const hit = e.target.closest("a,button,input,textarea,select,.tiltable,.pill-opt");
-      ring.classList.toggle("hover", !!hit);
-    });
-  };
-
   /* Nav hide/show */
   const navScroll = () => {
     const header = $(".site-header");
@@ -531,7 +505,6 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     bootIcons();
-    cursor();
     navScroll();
     drawer();
     animate();
