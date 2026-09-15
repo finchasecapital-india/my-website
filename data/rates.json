@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "version": 2,
+    "verified": "Sep 2026",
+    "fy": "FY 2025-26",
+    "source": "Finchase Capital tools desk, Lakhs/Crores in absolute rupees unless noted",
+    "notes": "Edit values + bump version/verified, redeploy. Frontend merges over built-in defaults and shows this verified date."
+  },
+  "corp": {
+    "baa": 0.22, "baaSur": 0.10,
+    "std": 0.25, "stdBig": 0.30,
+    "sur1": 0.07, "sur2": 0.12,
+    "llp": 0.30, "llpSur": 0.12,
+    "cess": 0.04
+  },
+  "rebate": { "old": 500000, "neu": 1200000 },
+  "slabs": {
+    "new": [[400000, 0], [800000, 0.05], [1200000, 0.10], [1600000, 0.15], [2000000, 0.20], [2400000, 0.25], [null, 0.30]],
+    "old": [[250000, 0], [500000, 0.05], [1000000, 0.20], [null, 0.30]]
+  },
+  "msme": {
+    "micro": [25000000, 100000000],
+    "small": [250000000, 1000000000],
+    "medium": [1250000000, 5000000000]
+  },
+  "mult": {
+    "saas": [8, 12, 18, 28],
+    "fintech": [6, 10, 14, 22],
+    "consumer": [2, 4, 8, 14],
+    "manufacturing": [1.2, 2.5, 6, 10],
+    "health": [4, 7, 12, 18],
+    "logistics": [1.5, 3, 8, 12],
+    "edtech": [3, 6, 10, 16],
+    "other": [2, 4, 8, 14]
+  },
+  "stageMult": { "pre": 0.7, "early": 0.9, "growth": 1, "ent": 1.15 },
+  "cma": { "wc": 0.25, "margin": 0.05 },
+  "foir": { "ok": 40, "stretch": 60 }
+}
+
