@@ -116,7 +116,7 @@ export async function sendMail(env, to, subject, text) {
   try {
     const key = env.RESEND_API_KEY || "";
     if (!key || !to) return false;
-    const from = "Finchase Capital <" + (env.FROM_EMAIL || "ideas@finchasecapital.in") + ">";
+    const from = "Finchase Capital <" + (env.FROM_EMAIL || "ideas@finchasecapital.com") + ">";
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
@@ -129,5 +129,5 @@ export async function sendMail(env, to, subject, text) {
 }
 
 export function siteUrl(env) {
-  return (env.SITE_URL || "https://finchasecapital.in").replace(/\/$/, "");
+  return (env.SITE_URL || "https://finchasecapital.com").replace(/\/$/, "");
 }

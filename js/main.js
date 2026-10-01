@@ -73,14 +73,32 @@
       drawerEl.classList.remove("open");
       overlay.classList.remove("open");
       btn.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
     };
     btn.addEventListener("click", () => {
       const open = !drawerEl.classList.contains("open");
       drawerEl.classList.toggle("open", open);
       overlay.classList.toggle("open", open);
       btn.setAttribute("aria-expanded", String(open));
+      /* Lock body scroll so the page doesn't slide behind the open menu. */
+      document.body.style.overflow = open ? "hidden" : "";
     });
     overlay.addEventListener("click", close);
+    /* Focus trap: keyboard/screen-reader users can't tab out of the open menu. */
+    drawerEl.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab" || !drawerEl.classList.contains("open")) return;
+      const f = [...drawerEl.querySelectorAll("a, button, summary, input")].filter((el) => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    /* Esc closes drawer and any open modal (covers mobile hardware-back UX gap partially). */
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" && e.key !== "Esc") return;
+      close();
+      $$(".modal-bg.open").forEach((m) => m.classList.remove("open"));
+    });
     $$(".drawer a").forEach((a) => a.addEventListener("click", close));
   };
 
@@ -212,6 +230,16 @@
     }
     $(".car-nav.prev")?.addEventListener("click", () => go(i - 1));
     $(".car-nav.next")?.addEventListener("click", () => go(i + 1));
+    /* Touch swipe (mobile has no hover/arrows precision). */
+    let touchX = null;
+    track.addEventListener("touchstart", (e) => { if (e.touches.length === 1) touchX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener("touchend", (e) => {
+      if (touchX === null) return;
+      const dx = (e.changedTouches[0] || {}).clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) < 40) return;
+      go(dx < 0 ? i + 1 : i - 1);
+    }, { passive: true });
     let timer = setInterval(() => go(i >= max() ? 0 : i + 1), 5000);
     rootEl.addEventListener("mouseenter", () => clearInterval(timer));
     rootEl.addEventListener("mouseleave", () => { timer = setInterval(() => go(i >= max() ? 0 : i + 1), 5000); });
@@ -251,6 +279,13 @@
       const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
       bar.classList.toggle("show", window.innerWidth <= 768 && p > 0.6);
     }, { passive: true });
+    /* Touch-only: hide the sticky bar while the keyboard is open. */
+    if ("ontouchstart" in window && window.visualViewport) {
+      const vv = window.visualViewport;
+      vv.addEventListener("resize", () => {
+        document.body.classList.toggle("kb-open", vv.height < window.innerHeight * 0.7);
+      });
+    }
   };
 
   /* FAQ */
@@ -618,6 +653,16 @@
       const nextBtn = car.querySelector(".tl-arrow.next");
       if (prevBtn) prevBtn.addEventListener("click", prev);
       if (nextBtn) nextBtn.addEventListener("click", next);
+      /* Touch swipe so phase cards are reachable without the arrows. */
+      let tlTouchX = null;
+      view.addEventListener("touchstart", (e) => { if (e.touches.length === 1) tlTouchX = e.touches[0].clientX; }, { passive: true });
+      view.addEventListener("touchend", (e) => {
+        if (tlTouchX === null) return;
+        const dx = (e.changedTouches[0] || {}).clientX - tlTouchX;
+        tlTouchX = null;
+        if (Math.abs(dx) < 40) return;
+        if (dx < 0) next(); else prev();
+      }, { passive: true });
       syncs.push({
         reset: () => {
           kids().sort((a, b) => (+a.dataset.i || 0) - (+b.dataset.i || 0)).forEach((c) => track.appendChild(c));
