@@ -1013,7 +1013,7 @@ body.no-wa .wa-float { display: none; }
   .tl-row::after { left: 1px; }
   .tl-row .yr { padding-left: 28px; padding-right: 0; }
 }
-@media (max-width: 640px) {
+@media (max-width: 820px) {
   .hero-centered .h1-nowrap { white-space: normal; }
   .hero h1, .page-hero h1 { font-size: clamp(1.8rem, 7.2vw, 2.7rem); }
   .hero h1 { font-size: clamp(calc(1.8rem + 10px), calc(7.2vw + 10px), calc(2.7rem + 10px)); }
@@ -1104,7 +1104,7 @@ body::after {
 .tool-toggle:hover { border-color: var(--accent); }
 .tool-toggle:hover::before { color: var(--accent); }
 .tool-sec:not(.collapsed) .tool-toggle::before { content: "–"; }
-.tool-sec > h2 { cursor: pointer; padding-right: 52px; }
+.tool-sec > h2 { cursor: pointer; padding-right: 68px; }
 .tool-sec.collapsed .tool-collapsible { display: none; }
 .tool-sec .tcat { display: inline-block; font-family: 'Poppins','Helvetica','Roboto','Inter',sans-serif; font-size: .7rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--marine, #0369A1); margin-bottom: 10px; }
 .tool-sec h2 { margin-bottom: 6px; }
@@ -1382,4 +1382,166 @@ body::after {
   .ed-list > li, .ed-steps > li { grid-template-columns: 40px 1fr; }
   .ed-inside .check-grid { grid-template-columns: 1fr; }
 }
+
+/* ============ Mobile patch B1: bottom-bar collision, footer stack, table scroll ============ */
+@media (max-width: 768px) {
+  /* WhatsApp bubble parks above the sticky CTA bar instead of on it. */
+  .wa-float { bottom: 86px; right: 16px; width: 48px; height: 48px; }
+  .mobile-cta { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .mobile-cta .btn { flex: 1 1 0; padding-inline: 12px; }
+  /* Stacked footer nav aligns left, not right. */
+  .ft-nav > div:last-child { align-items: flex-start; text-align: left; }
+  /* Wide tables scroll inside themselves instead of clipping off-screen. */
+  .vest-table, .track-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+/* __MOBILE-B1-END__ */
+
+/* ============ Mobile patch B2: touch targets + arrow placement ============ */
+/* Carousel dots keep the 8px look with a 28px tap area. */
+.dots button { width: 28px; height: 28px; display: inline-grid; place-items: center; background: none; border-radius: 99px; }
+.dots button::before { content: ""; display: block; width: 8px; height: 8px; border-radius: 99px; background: var(--light-gray); transition: width var(--duration-fast), background var(--duration-fast); }
+.dots button.active { width: 28px; background: none; }
+.dots button.active::before { width: 22px; background: var(--accent); }
+/* Pills, filters and icon toggles meet the 44px minimum. */
+.pill-tabs button { min-height: 44px; }
+.filter { min-height: 44px; display: inline-flex; align-items: center; }
+.tool-toggle { width: 44px; height: 44px; }
+.modal .x { padding: 12px; right: 8px; top: 6px; }
+@media (max-width: 768px) {
+  /* Carousel arrows sit fully inside the track instead of sliced at the edge. */
+  .car-nav.prev { left: 8px; } .car-nav.next { right: 8px; }
+  .car-nav { z-index: 3; }
+  /* Timeline arrows ride inside the card viewport on phones. */
+  .tl-arrow.prev { left: 8px; } .tl-arrow.next { right: 8px; }
+}
+/* __MOBILE-B2-END__ */
+
+/* ============ Mobile patch B3: inputs, keyboards, kbd hint ============ */
+/* 16px+ inputs stop iOS Safari auto-zooming on focus. */
+.field input, .field textarea, .field select { font-size: 16px; }
+.news input { font-size: 16px; }
+@media (max-width: 640px) {
+  /* Desktop-only shortcut chip has no meaning on phones. */
+  .svc-search kbd { display: none; }
+}
+/* __MOBILE-B3-END__ */
+
+/* ============ Mobile patch B4: masks, units, grids, timeline, misc ============ */
+.marquee-wrap { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.tl-view { -webkit-mask-image: linear-gradient(90deg, transparent, #000 26px, #000 calc(100% - 26px), transparent); }
+/* Dynamic viewport units stop iOS-chrome jumps; vh stays as fallback. */
+.hero { min-height: calc(100vh - var(--announce-h) - var(--nav-h)); min-height: calc(100dvh - var(--announce-h) - var(--nav-h)); }
+.insights-hero { min-height: calc(100vh - var(--announce-h) - var(--nav-h)); min-height: calc(100dvh - var(--announce-h) - var(--nav-h)); }
+/* No-JS fallback: animated content stays visible when scripts fail. */
+@media (scripting: none) {
+  [data-animate] { opacity: 1 !important; transform: none !important; }
+  #form-reveal { opacity: 1; visibility: visible; transform: none; }
+}
+/* Consistent tap feedback (no random gray flashes on Android). */
+a, button { -webkit-tap-highlight-color: transparent; }
+@media (max-width: 1024px) {
+  /* Vertical rail pills become normal inline pills below desktop. */
+  .section-label.sticky-label { position: static; writing-mode: horizontal-tb; transform: none; width: auto; padding: 6px 12px; }
+  .article-grid, .values { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .sec-head-row { flex-wrap: wrap; }
+  /* Orphan 5th stat cell takes its own full row. */
+  .stats-single .stat-cell:last-child { grid-column: 1 / -1; border-left: 0; border-top: 1px solid rgba(15, 23, 42, 0.14); }
+  /* Timeline year aligns with the rail instead of double-indenting. */
+  .tl-row .yr { padding-left: 0; }
+  /* Journey accordions read left-aligned, not right. */
+  .stack-list li { text-align: left; }
+  .stack-go { font-size: 1.6rem; padding: 12px 18px; }
+  /* Phase tabs scroll sideways instead of crushing to ~65px each. */
+  .sec-head-row.journey-head .pill-tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sec-head-row.journey-head .pill-tabs::-webkit-scrollbar { display: none; }
+  .sec-head-row.journey-head .pill-tabs button { flex: 0 0 auto; }
+  /* How-we-work nav wraps instead of crowding one row. */
+  .hww-nav { flex-wrap: wrap; row-gap: 4px; }
+  /* Brand name stays visible next to the mark on phones. */
+  .site-header .logo-text { opacity: 1 !important; visibility: visible !important; }
+  /* Life bar scrolls with momentum + faded edges. */
+  .life-bar { -webkit-overflow-scrolling: touch; mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent); }
+  /* Eyebrow microcopy bumps to a phone-readable size. */
+  .trust-strip .tiny { font-size: 12px; }
+  .micro { font-size: 12.5px; }
+}
+@media (max-width: 640px) {
+  .metrics3 .n { font-size: 1.05rem; }
+}
+/* Lucide replacements for the old unicode arrows. */
+.stack-go svg { width: 34px; height: 34px; }
+.stack-go { place-items: center; }
+.hww-arrow svg { width: 26px; height: 26px; }
+.hww-flip svg { width: 30px; height: 30px; }
+@media (prefers-reduced-motion: reduce) {
+  .ambient-canvas .orb, .marquee, .kpi-float, .pulse-dot, .wa-float::before,
+  .btn-primary:hover::after, .checklist li, .success-check path { animation: none !important; }
+}
+/* __MOBILE-B4-END__ */
+
+/* ============ Mobile patch B5: leftover targets, drawer marker, small-type safety ============ */
+.socials { gap: 4px; }
+.socials a { min-width: 44px; min-height: 44px; display: inline-grid; place-items: center; }
+.ft-nav a { min-height: 44px; display: flex; align-items: center; }
+.pill-opt { min-height: 44px; display: inline-flex; align-items: center; }
+.toc-link { min-height: 44px; display: inline-flex; align-items: center; }
+.hww-arrow { min-width: 44px; min-height: 44px; }
+/* Drawer Practice submenu gets a real 44px toggle affordance, not the native triangle. */
+.drawer summary { list-style: none; display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+.drawer summary::-webkit-details-marker { display: none; }
+.drawer summary::after { content: "+"; font-size: 20px; font-weight: 400; color: var(--mid-gray); }
+.drawer details[open] summary::after { content: "–"; }
+@media (max-width: 768px) {
+  /* Primary actions go full-width on phones. */
+  #consult-form button[type="submit"], .modal-bg .modal .btn { width: 100%; }
+}
+@media (max-width: 640px) {
+  /* Ghost numerals stop sitting on headings at phone widths. */
+  .phase-ghostnum { font-size: 2.2rem; top: -6px; }
+}
+@media (max-width: 600px) {
+  /* Fan-card type shrinks so fixed-height faces can't clip. */
+  .hww-title { font-size: 1.4rem; }
+  .hww-back p { font-size: 16.5px; }
+}
+/* __MOBILE-B5-END__ */
+
+/* ============ Mobile patch B6: viewport, rhythm, density (mobile-only) ============ */
+/* dvh fallbacks never change supported-desktop rendering (identical values). */
+.drawer { height: 100%; height: 100dvh; }
+.modal { max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); overflow: auto; }
+/* Press feedback now that tap-flash is standardized off (touch only). */
+@media (hover: none) {
+  .btn:active { transform: scale(0.97); }
+}
+.v-tabs { scrollbar-width: none; }
+.v-tabs::-webkit-scrollbar { display: none; }
+@media (max-width: 1024px) {
+  /* Anchor jumps clear the sticky header on phones/tablets. */
+  :target { scroll-margin-top: calc(var(--nav-h) + 16px); }
+}
+@media (max-width: 768px) {
+  /* Slimmer sticky header reclaims phone viewport. */
+  :root { --nav-h: 60px; --space-section: 24px; }
+  .drawer { transition-duration: 0.35s; }
+  .car-nav { width: 44px; height: 44px; }
+  .tl-arrow { width: 44px; height: 44px; }
+  .flip-front { min-height: 400px; }
+  .flip-btn { width: 64px; height: 64px; }
+  .flip-btn svg { width: 60px; height: 60px; }
+  /* Sticky CTA hides while the keyboard is open (see .kb-open toggle in main.js). */
+  body.kb-open .mobile-cta { display: none !important; }
+}
+@media (max-width: 640px) {
+  .metrics3 { grid-template-columns: 1fr; }
+  .hero-ctas .btn { flex: 1 1 100%; }
+  .stack-info { padding: 6px 20px 24px; }
+  .article-card .thumb { height: 160px; }
+  .phase-ghostnum { opacity: 0.7; }
+  .stack-head { font-size: 15px; }
+  .breadcrumb { line-height: 1.9; }
+}
+/* __MOBILE-B6-END__ */
 
